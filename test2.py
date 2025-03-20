@@ -11,7 +11,6 @@ import voyageai
 
 embedding_model = TextEmbedding()
 API = os.getenv("PINECONE_API_KEY")
-pc = Pinecone(api_key=API)
 vo = voyageai.Client()
 
 
@@ -26,9 +25,11 @@ class RetrieverTool(Tool):
     }
     output_type = "string"
 
-    def __init__(self, **kwargs):
+    def __init__(self,org_id **kwargs):
         super().__init__(**kwargs)
-        self.index = pc.Index("unified-pyano")
+        self.pc = Pinecone(api_key=API)
+        self.index = self.pc.Index("unified-pyano")
+        self.org_id = org_id
 
     def forward(self, query: str) -> str:
         # assert isinstance(query_embeddings, list), "Your search query must be a list of floats"
